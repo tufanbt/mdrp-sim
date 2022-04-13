@@ -58,11 +58,11 @@ settings = Settings({
 
     # Simulation Constants
     # --- time =  Simulate from this time on
-    'SIMULATE_FROM': time(0, 0, 0),
+    'SIMULATE_FROM': time(10, 0, 0),
     # --- time =  Simulate until this time
-    'SIMULATE_UNTIL': time(10, 0, 0),
+    'SIMULATE_UNTIL': time(20, 0, 0),
     # --- time =  Create new users to submit orders from this time
-    'CREATE_USERS_FROM': time(9, 0, 0),
+    'CREATE_USERS_FROM': time(0, 5, 0), #time(9, 0, 0)
     # --- time =  Create new users to submit orders until this time
     'CREATE_USERS_UNTIL': time(9, 5, 0),
     # --- time =  Create new couriers to log on from this time
