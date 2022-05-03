@@ -48,27 +48,27 @@ POLICIES_KEYS = [
 settings = Settings({
     # Project
     # --- List[int] = Desired instances to be simulated
-    'INSTANCES': [3],
+    'INSTANCES': [24],
     # --- bool =  Enable / Disable specific (verbose) actor and policy logs
     'VERBOSE_LOGS': False,
     # --- Optional[Union[float, int]] = Seed for running the simulation. Can be None.
     'SEED': 8795,
     # str = Optimizer to use. Options: ['pulp', 'gurobi']
-    'OPTIMIZER': 'pulp',
+    'OPTIMIZER': 'gurobi',
 
     # Simulation Constants
     # --- time =  Simulate from this time on
     'SIMULATE_FROM': time(10, 0, 0),
     # --- time =  Simulate until this time
-    'SIMULATE_UNTIL': time(20, 0, 0),
+    'SIMULATE_UNTIL': time(23, 59, 59),
     # --- time =  Create new users to submit orders from this time
-    'CREATE_USERS_FROM': time(0, 5, 0), #time(9, 0, 0)
+    'CREATE_USERS_FROM': time(10, 5, 0), #time(9, 0, 0)
     # --- time =  Create new users to submit orders until this time
-    'CREATE_USERS_UNTIL': time(9, 5, 0),
+    'CREATE_USERS_UNTIL': time(23, 30, 0),
     # --- time =  Create new couriers to log on from this time
-    'CREATE_COURIERS_FROM': time(0, 0, 0),
+    'CREATE_COURIERS_FROM': time(10, 0, 0),
     # --- time = Create new couriers to log on until this time
-    'CREATE_COURIERS_UNTIL': time(0, 5, 0),
+    'CREATE_COURIERS_UNTIL': time(23, 0, 0),
     # --- float = Warm up time [sec] to achieve steady state simulation
     'WARM_UP_TIME': hour_to_sec(3) + min_to_sec(0),
 
@@ -82,11 +82,11 @@ settings = Settings({
     # --- str = Policy for executing prepositioning. Options: ['naive']
     'DISPATCHER_PREPOSITIONING_POLICY': 'naive',
     # --- str = Policy for matching. Options: ['greedy', 'mdrp', 'mdrp_graph', 'mdrp_graph_prospects', 'modified_mdrp']
-    'DISPATCHER_MATCHING_POLICY': 'mdrp',
+    'DISPATCHER_MATCHING_POLICY': 'mdrp_graph',
 
     # Simulation Policies - Courier
     # --- str = Policy for accepting a notification. Options: ['uniform', 'absolute']
-    'COURIER_ACCEPTANCE_POLICY': 'uniform',
+    'COURIER_ACCEPTANCE_POLICY': 'absolute',
     # --- str = Policy to determine if the courier wants to relocate. Options: ['neighbors', 'still']
     'COURIER_MOVEMENT_EVALUATION_POLICY': 'neighbors',
     # --- str = Policy that models the movement of a courier about the city. Options: ['osrm']
@@ -138,9 +138,9 @@ settings = Settings({
 
     # Simulation Policies Configuration - Courier - Other Constants
     # float = Money earned for dropping off an order
-    'COURIER_EARNINGS_PER_ORDER': 3,
+    'COURIER_EARNINGS_PER_ORDER': 17,
     # float = Rate at which the courier can be compensated per hour
-    'COURIER_EARNINGS_PER_HOUR': 8,
+    'COURIER_EARNINGS_PER_HOUR': 51,
 
     # Simulation Policies Configuration - User - Cancellation Policy
     # float = Time [sec] that a user waits before deciding to cancel an order

@@ -9,3 +9,10 @@ services:
       dockerfile: ./docker/colombia.dockerfile
     ports:
       - "5000:5000"
+  osrm_turkey:
+    image: turkey_osrm
+    build:
+      context: .
+      dockerfile: ./docker/turkey.dockerfile
+    ports:
+      - "5000:5000"

@@ -127,7 +127,7 @@ class User(Actor):
         self.env.schedule(event=cancellation_event, priority=NORMAL, delay=settings.USER_WAIT_TO_CANCEL)
 
     def _evaluate_cancellation_callback(self, event: Event):
-        """Callback dto activate de cancellation evaluation eventr"""
+        """Callback to activate the cancellation evaluation event"""
 
         self._evaluate_cancellation_event()
         event.succeed()
