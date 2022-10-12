@@ -18,6 +18,7 @@ from policies.courier.acceptance.courier_acceptance_policy import CourierAccepta
 from policies.courier.acceptance.random_uniform import UniformAcceptancePolicy
 from policies.courier.movement.courier_movement_policy import CourierMovementPolicy
 from policies.courier.movement.osrm import OSRMMovementPolicy
+from policies.courier.movement.osrm_dynamic import OSRMDynamicMovementPolicy
 from policies.courier.movement_evaluation.courier_movement_evaluation_policy import CourierMovementEvaluationPolicy
 from policies.courier.movement_evaluation.geohash_neighbors import NeighborsMoveEvalPolicy
 from policies.courier.movement_evaluation.still import StillMoveEvalPolicy
@@ -33,7 +34,8 @@ COURIER_MOVEMENT_EVALUATION_POLICIES_MAP = {
     'still': StillMoveEvalPolicy()
 }
 COURIER_MOVEMENT_POLICIES_MAP = {
-    'osrm': OSRMMovementPolicy()
+    'osrm': OSRMMovementPolicy(),
+    'osrm_dynamic': OSRMDynamicMovementPolicy()
 }
 
 

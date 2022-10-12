@@ -38,6 +38,7 @@ POLICIES_KEYS = [
     'DISPATCHER_PREPOSITIONING_EVALUATION_POLICY',
     'DISPATCHER_PREPOSITIONING_POLICY',
     'DISPATCHER_MATCHING_POLICY',
+    'DISPATCHER_DEMAND_MANAGEMENT_POLICY'
     'COURIER_ACCEPTANCE_POLICY',
     'COURIER_MOVEMENT_EVALUATION_POLICY',
     'COURIER_MOVEMENT_POLICY',
@@ -48,29 +49,29 @@ POLICIES_KEYS = [
 settings = Settings({
     # Project
     # --- List[int] = Desired instances to be simulated
-    'INSTANCES': [24],
+    'INSTANCES': [301],
     # --- bool =  Enable / Disable specific (verbose) actor and policy logs
     'VERBOSE_LOGS': False,
     # --- Optional[Union[float, int]] = Seed for running the simulation. Can be None.
     'SEED': 8795,
     # str = Optimizer to use. Options: ['pulp', 'gurobi']
-    'OPTIMIZER': 'gurobi',
+    'OPTIMIZER': 'pulp',
 
     # Simulation Constants
     # --- time =  Simulate from this time on
-    'SIMULATE_FROM': time(10, 0, 0),
+    'SIMULATE_FROM': time(9, 0, 0),
     # --- time =  Simulate until this time
     'SIMULATE_UNTIL': time(23, 59, 59),
     # --- time =  Create new users to submit orders from this time
-    'CREATE_USERS_FROM': time(10, 5, 0), #time(9, 0, 0)
+    'CREATE_USERS_FROM': time(9, 0, 0), #time(9, 0, 0)
     # --- time =  Create new users to submit orders until this time
-    'CREATE_USERS_UNTIL': time(23, 30, 0),
+    'CREATE_USERS_UNTIL': time(23, 0, 0),
     # --- time =  Create new couriers to log on from this time
-    'CREATE_COURIERS_FROM': time(10, 0, 0),
+    'CREATE_COURIERS_FROM': time(9, 0, 0),
     # --- time = Create new couriers to log on until this time
-    'CREATE_COURIERS_UNTIL': time(23, 0, 0),
+    'CREATE_COURIERS_UNTIL': time(23, 59, 59),
     # --- float = Warm up time [sec] to achieve steady state simulation
-    'WARM_UP_TIME': hour_to_sec(3) + min_to_sec(0),
+    'WARM_UP_TIME': hour_to_sec(2) + min_to_sec(0),
 
     # Simulation Policies - Dispatcher
     # --- str = Policy for canceling orders. Options: ['static']
@@ -82,15 +83,26 @@ settings = Settings({
     # --- str = Policy for executing prepositioning. Options: ['naive']
     'DISPATCHER_PREPOSITIONING_POLICY': 'naive',
     # --- str = Policy for matching. Options: ['greedy', 'mdrp', 'mdrp_graph', 'mdrp_graph_prospects', 'modified_mdrp']
-    'DISPATCHER_MATCHING_POLICY': 'mdrp_graph',
+    'DISPATCHER_MATCHING_POLICY': 'mdrp',
+    # --- str = Policy for demand management. Options: ['no_demand_management', 'yes_demand_management']
+    'DISPATCHER_DEMAND_MANAGEMENT_POLICY': 'yes_demand_management',
+    
+    # Added Parameters - Dispatcher
+    # --- float = density threshold to limit the radius
+    'DENSITY_THRESHOLD': 0.8,
+    # --- float = radius in kilometers to limit the demand
+    'LIMIT_RADIUS' : 2.5,
+    # --- float = probability of substitution in the case of radius excess
+    'SUBSTITUTION_PROB' : 0.5,
+    
 
     # Simulation Policies - Courier
     # --- str = Policy for accepting a notification. Options: ['uniform', 'absolute']
     'COURIER_ACCEPTANCE_POLICY': 'absolute',
     # --- str = Policy to determine if the courier wants to relocate. Options: ['neighbors', 'still']
     'COURIER_MOVEMENT_EVALUATION_POLICY': 'neighbors',
-    # --- str = Policy that models the movement of a courier about the city. Options: ['osrm']
-    'COURIER_MOVEMENT_POLICY': 'osrm',
+    # --- str = Policy that models the movement of a courier about the city. Options: ['osrm', 'osrm_dynamic]
+    'COURIER_MOVEMENT_POLICY': 'osrm_dynamic',
 
     # Simulation Policies - User
     # --- str = Policy to decide if a user wants to cancel an order. Options: ['random']
@@ -102,7 +114,7 @@ settings = Settings({
 
     # Simulation Policies Configuration - Dispatcher - Buffering Policy
     # float = Time [sec] to buffer orders
-    'DISPATCHER_ROLLING_HORIZON_TIME': min_to_sec(2),
+    'DISPATCHER_ROLLING_HORIZON_TIME': min_to_sec(1),
 
     # Simulation Policies Configuration - Dispatcher - Prepositioning Evaluation Policy
     # float = Time [sec] to execute prepositioning
@@ -150,12 +162,12 @@ settings = Settings({
 
     # Object Constants
     # int = Maximum service time [sec] at the pick up location
-    'ORDER_MAX_PICK_UP_SERVICE_TIME': min_to_sec(10),
+    'ORDER_MAX_PICK_UP_SERVICE_TIME': min_to_sec(3),
     # int =  Maximum service time [sec] at the drop off location
-    'ORDER_MAX_DROP_OFF_SERVICE_TIME': min_to_sec(5),
+    'ORDER_MAX_DROP_OFF_SERVICE_TIME': min_to_sec(3),
     # int = Minimum service time [sec] at either a pick up or drop off location
-    'ORDER_MIN_SERVICE_TIME': min_to_sec(2),
+    'ORDER_MIN_SERVICE_TIME': min_to_sec(1),
     # float = Target time [sec] in which an order should be delivered
-    'ORDER_TARGET_DROP_OFF_TIME': min_to_sec(40),
+    'ORDER_TARGET_DROP_OFF_TIME': min_to_sec(1),
 
 })

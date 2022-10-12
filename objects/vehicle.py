@@ -5,7 +5,7 @@ from utils.datetime_utils import hour_to_sec
 DEFAULT_VELOCITY = {
     0: 5 / hour_to_sec(1),
     1: 15 / hour_to_sec(1),
-    2: 23 / hour_to_sec(1),
+    2: 16.49 / hour_to_sec(1),
     3: 25 / hour_to_sec(1)
 
 }

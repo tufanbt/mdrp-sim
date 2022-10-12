@@ -132,3 +132,23 @@ class User(Actor):
         self._evaluate_cancellation_event()
         event.succeed()
         event.callbacks = []
+
+    def save_lost_order(self,
+            order_id: int,
+            pick_up_at: Location,
+            drop_off_at: Location,
+            placement_time: time,
+            expected_drop_off_time: time,
+            preparation_time: time,
+            ready_time: time
+    ):
+        order = Order(
+            order_id=order_id,
+            pick_up_at=pick_up_at,
+            drop_off_at=drop_off_at,
+            placement_time=placement_time,
+            expected_drop_off_time=expected_drop_off_time,
+            user=self
+        )
+        self.order = order
+        self.dispatcher.lost_orders[order.order_id] = order

@@ -1,7 +1,7 @@
 import logging
 from datetime import time
 from typing import Dict
-
+import time as time2
 import pandas as pd
 from sqlalchemy import create_engine, DateTime, Integer, Float, JSON, Time, Boolean, BigInteger
 
@@ -25,7 +25,16 @@ class MetricsService:
 
         metrics = self._calculate_metrics(dispatcher)
         logging.info(f'Instance {self._instance} | Successful metrics calculation.')
-
+        lost_orders_string = 'epoch time = ' + str(int(time2.time())) + '\n' + 'instance id = ' + str(self._instance) + '\n' + \
+            'seed = ' + str(settings.SEED) + '\n' + 'density threshold = ' + str(settings.DENSITY_THRESHOLD) + '\n' + 'limit radius = ' + str(settings.LIMIT_RADIUS) + \
+                '\n' + 'matching policy = ' + settings.DISPATCHER_MATCHING_POLICY + '\n' + \
+                    'number of lost orders = ' + str(len(dispatcher.lost_orders))
+        try:
+            with open(f'lost_orders/{str(int(time2.time()))}.txt', 'w') as file:
+                file.write(lost_orders_string)
+        except:
+            pass
+        
         self._save_metrics(metrics)
         self._connection.dispose()
         logging.info(f'Instance {self._instance} | Successfully saved metrics to DDBB.')
@@ -150,4 +159,4 @@ class MetricsService:
                 'matching_time': Float,
                 'matches': Integer,
             }
-        )
+        )  

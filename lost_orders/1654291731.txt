@@ -1,0 +1,7 @@
+epoch time = 1654291731
+instance id = 301
+seed = 8795
+density threshold = 0.8
+limit radius = 2.5
+matching policy = mdrp
+number of lost orders = 177

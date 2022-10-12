@@ -8,7 +8,9 @@ orders_query = """
         placement_time,
         preparation_time,
         ready_time,
-        expected_drop_off_time
+        expected_drop_off_time,
+        pick_up_lat2,
+        pick_up_lng2
     FROM orders_instance_data
     WHERE placement_time = {placement_time} AND instance_id = {instance_id}
 """

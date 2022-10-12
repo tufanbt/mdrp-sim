@@ -24,8 +24,12 @@ from policies.dispatcher.prepositioning.naive import NaivePrepositioningPolicy
 from policies.dispatcher.prepositioning_evaluation.dispatcher_prepositioning_evaluation_policy import \
     DispatcherPrepositioningEvaluationPolicy
 from policies.dispatcher.prepositioning_evaluation.fixed import FixedPrepositioningEvaluationPolicy
+from policies.dispatcher.demand_management.dispatcher_demand_management_policy import DispatcherDemandManagementPolicy
+from policies.dispatcher.demand_management.no_demand_management import NoDemandManagementPolicy
+from policies.dispatcher.demand_management.yes_demand_management import YesDemandManagementPolicy
 from settings import settings
 from utils.datetime_utils import sec_to_time, time_diff, time_add
+from objects.location import Location
 
 DISPATCHER_CANCELLATION_POLICIES_MAP = {
     'static': StaticCancellationPolicy()
@@ -67,6 +71,11 @@ DISPATCHER_PREPOSITIONING_EVALUATION_POLICIES_MAP = {
     'fixed': FixedPrepositioningEvaluationPolicy()
 }
 
+DISPATCHER_DEMAND_MANAGEMENT_POLICIES_MAP = {
+    'no_demand_management': NoDemandManagementPolicy(),
+    'yes_demand_management': YesDemandManagementPolicy()
+}
+
 
 @dataclass
 class Dispatcher(Actor):
@@ -79,14 +88,19 @@ class Dispatcher(Actor):
     prepositioning_evaluation_policy: Optional[
         DispatcherPrepositioningEvaluationPolicy
     ] = FixedPrepositioningEvaluationPolicy()
-
+    demand_management_policy: Optional[DispatcherDemandManagementPolicy] = NoDemandManagementPolicy()
+    
+    density_threshold: Optional[float] = 0.8
+    limit_radius: Optional[float] = 2.5
+    substitution_prob: Optional[float] = 0.5
+    
     assigned_orders: Dict[int, Order] = field(default_factory=lambda: dict())
     canceled_orders: Dict[int, Order] = field(default_factory=lambda: dict())
     fulfilled_orders: Dict[int, Order] = field(default_factory=lambda: dict())
     placed_orders: Dict[int, Tuple[time, Order]] = field(default_factory=lambda: dict())
     scheduled_cancellation_evaluation_orders: Dict[int, Tuple[time, Order]] = field(default_factory=lambda: dict())
     unassigned_orders: Dict[int, Order] = field(default_factory=lambda: dict())
-
+    lost_orders: Dict[int, Order] = field(default_factory=lambda: dict())
     dropping_off_couriers: Dict[int, Courier] = field(default_factory=lambda: dict())
     idle_couriers: Dict[int, Courier] = field(default_factory=lambda: dict())
     logged_off_couriers: Dict[int, Courier] = field(default_factory=lambda: dict())
@@ -528,3 +542,19 @@ class Dispatcher(Actor):
 
         event.succeed()
         event.callbacks = []
+
+    def _get_current_radius(self): 
+        density = (len(self.unassigned_orders) + len(self.placed_orders)) / (len(self.idle_couriers)+1)
+        if density > self.density_threshold:
+            return self.limit_radius
+        else:
+            return -1
+
+    def evaluate_demand_management(self, pick_up_at: Location, drop_off_at: Location):
+        current_radius = self._get_current_radius()
+        if current_radius == -1:
+            return True
+        else:
+            return self.demand_management_policy.execute(pick_up_at, drop_off_at, current_radius)
+        
+        
